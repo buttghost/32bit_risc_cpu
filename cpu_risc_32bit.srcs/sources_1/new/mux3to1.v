@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 10/18/2017 11:23:22 PM
+// Create Date: 10/21/2017 05:20:56 PM
 // Design Name: 
-// Module Name: reg_file
+// Module Name: mux3to1
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,19 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module reg_file(
-    output reg[31:0] DOut1,
-    output reg[31:0] DOut2,
-    input [4:0] AIn1,
-    input [4:0] AIn2,
-    input [4:0] AIn3,
-    input [31:0] DIn
+module mux3to1(
+    output reg[31:0] Data,
+    input [31:0] D0,
+    input [31:0] D1,
+    input [31:0] D2,
+    input [1:0] sel
     );
-    reg [31:0] rf [31:0];
-    always@(*)
-    begin
-        DOut1 <= rf[AIn1];
-        DOut2 <= rf[AIn2];
-        rf[AIn3] <= DIn;
-    end
+    always@(sel)
+    Data = (sel == 2'b00) ? D0 : (sel == 2'b01) ? D1 : (sel == 2'b10) ? D2 : 32'bX;
 endmodule
