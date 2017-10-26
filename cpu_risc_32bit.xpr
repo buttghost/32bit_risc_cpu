@@ -3,7 +3,7 @@
 <!--                                                         -->
 <!-- Copyright 1986-2017 Xilinx, Inc. All Rights Reserved.   -->
 
-<Project Version="7" Minor="20" Path="C:/Users/18485/Documents/32bit_risc_cpu/cpu_risc_32bit.xpr">
+<Project Version="7" Minor="20" Path="C:/Users/andre/200Project2/32bit_risc_cpu/cpu_risc_32bit.xpr">
   <DefaultLaunch Dir="$PRUNDIR"/>
   <Configuration>
     <Option Name="Id" Val="3ef55e82679a4e378851be05be2beb0b"/>
@@ -130,6 +130,7 @@
       <Filter Type="Srcs"/>
       <File Path="$PSRCDIR/sim_1/new/mux2to1_test.v">
         <FileInfo>
+          <Attr Name="AutoDisabled" Val="1"/>
           <Attr Name="UsedIn" Val="synthesis"/>
           <Attr Name="UsedIn" Val="implementation"/>
           <Attr Name="UsedIn" Val="simulation"/>
@@ -137,7 +138,7 @@
       </File>
       <Config>
         <Option Name="DesignMode" Val="RTL"/>
-        <Option Name="TopModule" Val="mux2to1_test"/>
+        <Option Name="TopModule" Val="IMem"/>
         <Option Name="TopLib" Val="xil_defaultlib"/>
         <Option Name="TopAutoSet" Val="TRUE"/>
         <Option Name="TransportPathDelay" Val="0"/>

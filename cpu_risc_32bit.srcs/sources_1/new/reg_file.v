@@ -33,6 +33,6 @@ module reg_file(
     begin
         DOut1 <= rf[AIn1];
         DOut2 <= rf[AIn2];
-        rf[AIn3] <= DIn;
+        rf[AIn3] <= (AIn3) ? DIn : 0; //to handle rf[0] is always 0
     end
 endmodule
