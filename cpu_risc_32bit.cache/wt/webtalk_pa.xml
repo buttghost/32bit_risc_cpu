@@ -3,7 +3,11 @@
 <!--The data in this file is primarily intended for consumption by Xilinx tools.
 The structure and the elements are likely to change over the next few releases.
 This means code written to parse this file will need to be revisited each subsequent release.-->
+<<<<<<< Updated upstream
 <application name="pa" timeStamp="Fri Nov  3 12:36:04 2017">
+=======
+<application name="pa" timeStamp="Wed Nov  1 18:10:19 2017">
+>>>>>>> Stashed changes
 <section name="Project Information" visible="false">
 <property name="ProjectID" value="d735d04e47cc46eb958825785b763ba1" type="ProjectID"/>
 <property name="ProjectIteration" value="1" type="ProjectIteration"/>
@@ -22,7 +26,7 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="EditUndo" value="92" type="JavaHandler"/>
 <property name="FileExit" value="6" type="JavaHandler"/>
 <property name="NewProject" value="1" type="JavaHandler"/>
-<property name="OpenProject" value="4" type="JavaHandler"/>
+<property name="OpenProject" value="5" type="JavaHandler"/>
 <property name="SaveFileProxyHandler" value="3" type="JavaHandler"/>
 <property name="ShowView" value="1" type="JavaHandler"/>
 <property name="SimulationRun" value="6" type="JavaHandler"/>
@@ -46,7 +50,7 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="GraphicalView_ZOOM_FIT" value="5" type="GuiResourceData"/>
 <property name="GraphicalView_ZOOM_IN" value="37" type="GuiResourceData"/>
 <property name="GraphicalView_ZOOM_OUT" value="5" type="GuiResourceData"/>
-<property name="MainMenuMgr_FILE" value="22" type="GuiResourceData"/>
+<property name="MainMenuMgr_FILE" value="24" type="GuiResourceData"/>
 <property name="MainMenuMgr_OPEN_RECENT_PROJECT" value="4" type="GuiResourceData"/>
 <property name="MsgTreePanel_MESSAGE_VIEW_TREE" value="5" type="GuiResourceData"/>
 <property name="PACommandNames_OPEN_PROJECT" value="1" type="GuiResourceData"/>
@@ -67,9 +71,15 @@ This means code written to parse this file will need to be revisited each subseq
 <property name="WaveformView_GOTO_TIME_0" value="5" type="GuiResourceData"/>
 </item>
 <item name="Other">
+<<<<<<< Updated upstream
 <property name="GuiMode" value="34" type="GuiMode"/>
 <property name="BatchMode" value="0" type="BatchMode"/>
 <property name="TclMode" value="33" type="TclMode"/>
+=======
+<property name="GuiMode" value="19" type="GuiMode"/>
+<property name="BatchMode" value="0" type="BatchMode"/>
+<property name="TclMode" value="18" type="TclMode"/>
+>>>>>>> Stashed changes
 </item>
 </section>
 </application>
