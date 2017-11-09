@@ -30,9 +30,9 @@ module PC(
     input reset
     );
     wire [1:0] sel = {sel_j, sel_b};
-    always@(posedge clk or negedge reset)
+    always@(posedge clk or posedge reset)
     begin
-        if (~reset)
+        if (reset)
             Count <= 0;  // start the program from the beginning
         else
             begin

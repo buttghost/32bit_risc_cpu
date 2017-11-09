@@ -29,7 +29,7 @@ module flip_flop #(parameter WIDTH = 32) //we can change the bit width on instan
         begin
         if (reset == 1)
             begin
-            q <= 32'b0;
+            q <= 0;
             end
         else
             begin    
