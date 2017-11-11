@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/09/2017 05:27:55 PM
+// Create Date: 11/11/2017 12:22:58 AM
 // Design Name: 
-// Module Name: floatmux
+// Module Name: floatshift
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,26 +20,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module floatmux23(
-input [22:0] in0, in1,
-input sel,
-output reg [22:0] out
+module floatshift(
+input [22:0] in,
+input [7:0] shift,
+output reg [23:0] out
     );
     
 always
     begin
-        out = (sel) ? in1 : in0;
-    end    
-endmodule
-
-module floatmux8(
-input [7:0] in0, in1,
-input sel,
-output reg [7:0] out
-    );
-    
-always
-    begin
-        out = (sel) ? in1 : in0;
+        out = in >> shift;
     end    
 endmodule
