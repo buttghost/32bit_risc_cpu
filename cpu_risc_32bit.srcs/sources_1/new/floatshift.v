@@ -21,13 +21,13 @@
 
 
 module floatshift(
-input [22:0] in,
+input [23:0] in,
 input [7:0] shift,
 output reg [23:0] out
     );
     
 always
     begin
-        out = in >> shift;
+        out = {in[23], in[22:0] >> shift};
     end    
 endmodule

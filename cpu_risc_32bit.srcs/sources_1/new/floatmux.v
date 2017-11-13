@@ -20,10 +20,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module floatmux23(
-input [22:0] in0, in1,
+module floatmux24(
+input [23:0] in0, in1,
 input sel,
-output reg [22:0] out
+output reg [23:0] out
     );
     
 always
