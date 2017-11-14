@@ -21,12 +21,12 @@
 
 
 module floatcmp(
-input [10:0] num1, num2,
+input [7:0] num1, num2,
 output reg sign, dexp);
 
 always
     begin
-        sign = (num1 < num2) ? 1 : 0;
-        dexp = (num1 < num2) ? (num2 - num1) : (num1 - num2);
+        sign <= (num1 < num2) ? 1 : 0;
+        dexp <= (num1 < num2) ? (num2 - num1) : (num1 - num2);
     end
 endmodule

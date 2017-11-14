@@ -40,6 +40,6 @@ output reg [7:0] out
     
 always
     begin
-        out = (sel) ? in1 : in0;
+        out <= (sel) ? in1 : in0;
     end    
 endmodule

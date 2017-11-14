@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/11/2017 12:22:58 AM
+// Create Date: 11/13/2017 07:17:44 PM
 // Design Name: 
-// Module Name: floatshift
+// Module Name: expaddadjust
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,14 +20,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module floatshift(
-input [23:0] in,
-input [7:0] shift,
-output reg [23:0] out
+module expaddadjust(
+input [7:0] exp,
+input [5:0] adjust,
+input zero,
+output reg [7:0] finalexp
     );
-    
 always
     begin
-        out <= {in[23], in[22:0] >> shift};
-    end    
+        finalexp <= (zero) ? 0 : (exp + {2'b00, adjust});
+    end
 endmodule
