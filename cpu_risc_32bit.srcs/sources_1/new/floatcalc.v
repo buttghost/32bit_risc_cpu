@@ -21,15 +21,20 @@
 
 
 module floatcalcadd(
-input [22:0] larger, smaller,
-input lsign, ssign, //sign bits of numbers
-output reg [23:0] sum, //to handle in case of overflow
-output reg sign);
+input [23:0] larger, smaller,
+input parity, //sign bits xor'd
+output reg [24:0] sum //to handle in case of overflow
+);
 
 always
     begin
-    sum <= (lsign == ssign) ? larger + smaller : larger - smaller;
-    //if the signs agree, then the values are added together, if not they take away from each other
-    sign <= lsign;  //no matter what, the sign bit is equal to the sign bit of the larger number
+        if (parity == 0)
+            begin
+            sum = larger + smaller;
+            end
+        else
+            begin
+            sum = larger - smaller;
+            end    
     end
 endmodule

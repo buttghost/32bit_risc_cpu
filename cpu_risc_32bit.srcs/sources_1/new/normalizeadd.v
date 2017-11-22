@@ -21,31 +21,35 @@
 
 
 module normalizeadd(
-input [23:0] in,
+input [24:0] in,
 output reg [5:0] shift,
 output reg [22:0] out,
 output reg zero
     );
 
-integer i = -1; //to cover overflow case
-integer check; 
-always
-    begin
+integer n = 0;
+reg [24:0] preshift;
+always @ (in)
+begin
     if (in == 0)
         begin
-        out = 0;
-        zero = 1;
+            zero = 1;
+            out = in [22:0];
         end
+    
     else
-        begin    
-        check = in[23];
-        while (check != 1 && i <23)
-            begin
-                i = i + 1;
-                check = in [i];
-            end  
-            out <= in >> i;
-            zero <= 0; 
-        end
-    end    
+        begin //need separate case to handle any needed shift right
+            for (integer i = 0; i < 25; i = i + 1)
+                begin
+                    if (in[i] == 1)
+                        begin
+                            n = i;
+                        end
+                end
+                shift = 24 - n;
+                zero = 0;
+                preshift = in >> shift;
+                out = preshift [22:0];
+        end    
+end      
 endmodule

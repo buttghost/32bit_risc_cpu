@@ -20,10 +20,10 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module floatmux24(
-input [23:0] in0, in1,
+module floatmux #(parameter WIDTH=32)(
+input [WIDTH-1:0] in0, in1,
 input sel,
-output reg [23:0] out
+output reg [WIDTH-1:0] out
     );
     
 always
@@ -32,14 +32,3 @@ always
     end    
 endmodule
 
-module floatmux8(
-input [7:0] in0, in1,
-input sel,
-output reg [7:0] out
-    );
-    
-always
-    begin
-        out <= (sel) ? in1 : in0;
-    end    
-endmodule
