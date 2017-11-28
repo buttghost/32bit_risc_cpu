@@ -30,8 +30,8 @@ module data_mem(
     always@(WE)
     begin
         if (WE == 1)
-            mem[AIn] = DIn;
+            mem[AIn] <= DIn;
         else
-            DOut = mem[AIn];
+            DOut <= mem[AIn];
     end
 endmodule
