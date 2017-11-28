@@ -70,7 +70,8 @@ D_b <= D_prev_pc + D_imm;
 end
 
 // RF
-OPC_Decoder decoder (.D(),              // decoded opcode, to flipflop
+wire [23:0] opc_rf, opc_alu;
+OPC_Decoder decoder (.D(opc_rf),              // decoded opcode, to flipflop
                      .Opcode(D_opc));
 wire [31:0] D_reg_d1, D_reg_d2;
 reg_file rf (.DOut1(D_reg_d1),
@@ -80,6 +81,10 @@ reg_file rf (.DOut1(D_reg_d1),
              .AIn3(),   // rd 3 cycles later
              .DIn());   // data from WB stage
 wire [31:0] D_alu_1, D_alu_2, D_alu_imm;
+flip_flop #24 rf_phase_opc (.d(opc_rf),
+                            .clk(clk),
+                            .reset(),
+                            .q(opc_alu));
 flip_flop rf_phase_d1 (.d(D_reg_d1),   // from rf DOut1
                         .clk(clk),
                         .reset(),
