@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 10/21/2017 05:20:56 PM
+// Create Date: 11/23/2017 12:47:48 PM
 // Design Name: 
-// Module Name: mux2to1
+// Module Name: OPC_Decoder
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,11 +20,13 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module mux2to1(
-    output reg[31:0] Data,
-    input [31:0] D0, D1,
-    input sel
+module OPC_Decoder(
+    output /*[3:0] D*/reg load,     // temporary width
+    input [5:0] Opcode
     );
     always@(*)
-    Data = sel ? D1 : D0;
+    case(Opcode)
+        6'h04:  load <= 1;
+        default: load <= 0;
+    endcase
 endmodule

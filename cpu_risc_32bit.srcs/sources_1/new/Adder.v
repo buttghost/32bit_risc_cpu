@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 10/21/2017 05:20:56 PM
+// Create Date: 11/21/2017 11:28:25 AM
 // Design Name: 
-// Module Name: mux2to1
+// Module Name: Adder
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,11 +20,14 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module mux2to1(
-    output reg[31:0] Data,
-    input [31:0] D0, D1,
-    input sel
+module Adder(
+    output reg [31:0] DOut,
+    input [31:0] D1,
+    input [31:0] D2,
+    input cin
     );
     always@(*)
-    Data = sel ? D1 : D0;
+    begin
+    DOut <= D1 + D2 + cin; 
+    end
 endmodule
