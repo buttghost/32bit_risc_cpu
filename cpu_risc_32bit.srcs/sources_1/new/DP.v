@@ -73,13 +73,14 @@ end
 // RF
 OPC_Decoder decoder (.D(opc_rf),              // decoded opcode, to flipflop
                      .Opcode(D_opc));
-wire [31:0] D_reg_d1, D_reg_d2;
+wire [31:0] D_reg_d1, D_reg_d2, ain3;
+reg [31:0] data;
 reg_file rf (.DOut1(D_reg_d1),
              .DOut2(D_reg_d2),
              .AIn1(D_rs1),   // rs1
              .AIn2(D_rs2),   // rs2
-             .AIn3(),   // rd 3 cycles later
-             .DIn());   // data from WB stage
+             .AIn3(ain3),   // rd 3 cycles later
+             .DIn(data));   // data from WB stage
 wire [31:0] D_alu_1, D_alu_2, D_alu_imm;
 flip_flop #24 rf_phase_opc (.d(opc_rf),
                             .clk(clk),
@@ -98,7 +99,8 @@ flip_flop rf_phase_imm (.d(D_imm),       // from sext immediate value
                         .reset(),
                         .q(D_alu_imm));      // to ALU
 wire [4:0] rd_rf_alu;
-flip_flop #5 rf_phase_rd (.d(/*opc ? D_rs2 : D_rd*/),
+//                              load,       move,       not,        movei,      sli,            sri,        addi,       subi
+flip_flop #5 rf_phase_rd (.d((opc_rf[3] | opc_rf[4] | opc_rf[14] | opc_rf[15] | opc_rf[16] | opc_rf[17] | opc_rf[18] | opc_rf[19]) ? D_rs2 : D_rd),
                           .clk(clk),
                           .reset(),
                           .q(rd_rf_alu));
@@ -112,12 +114,13 @@ else
 end
 
 // ALU
-wire [31:0] D_alu_val, D_mem_addr;
+wire [31:0] D_alu_val, D_mem_addr, D_dm_imm;
 wire [23:0] opc_dm;
 ALU alu (.DOut(D_alu_val),
          .Drs1(D_alu_1),    // need a mux to choose data input
          .Drs2(D_alu_2),
-         .Dimm(D_alu_imm));
+         .Dimm(D_alu_imm),
+         .Opc(opc_alu));
 wire [31:0] D_mem_in;
 flip_flop #24 alu_phase_opc (.d(opc_alu),
                              .clk(clk),
@@ -127,6 +130,10 @@ flip_flop alu_phase_rs1 (.d(D_alu_1),   // to mem for store
                          .clk(clk),
                          .reset(),
                          .q(D_mem_in));
+flip_flop alu_phase_imm (.d(D_alu_imm),      // store imm for movei
+                         .clk(clk),
+                         .reset(),
+                         .q(D_dm_imm));
 flip_flop alu_phase_alu (.d(D_alu_val),
                          .clk(clk),
                          .reset(),
@@ -138,7 +145,7 @@ flip_flop alu_phase_rd (.d(rd_rf_alu),
                         .q(rd_alu_dm));
                         
 // DM
-wire [31:0] D_mem_out;
+wire [31:0] D_mem_out, D_move, D_movei, D_mem, D_alu;
 data_mem mem (.DOut(D_mem_out),
               .AIn(D_mem_addr),
               .DIn(D_mem_in),
@@ -148,4 +155,32 @@ flip_flop #24 dm_phase_opc (.d(opc_dm),
                             .clk(clk),
                             .reset(),
                             .q(opc_wb));
+flip_flop dm_phase_rs1 (.d(D_mem_in),
+                        .clk(clk),
+                        .reset(),
+                        .q(D_move));    // to mux for WB
+flip_flop dm_phase_imm (.d(D_dm_imm),
+                        .clk(clk),
+                        .reset(),
+                        .q(D_movei));   // to mux for WB
+flip_flop dm_phase_mem (.d(D_mem_out),
+                        .clk(clk),
+                        .reset(),
+                        .q(D_mem));     // to mux for WB
+flip_flop dm_phase_alu (.d(D_mem_addr),
+                        .clk(clk),
+                        .reset(),
+                        .q(D_alu));     // to mux for WB
+flip_flop dm_phase_rd (.d(rd_alu_dm),
+                       .clk(clk),
+                       .reset(),
+                       .q(ain3));
+always@(*)
+case(opc_wb)
+24'b000000000000000000010000: data <= D_move;   // select move to write back
+24'b000000001000000000000000: data <= D_movei;  // select movei to write back
+24'b000000000000000000001000: data <= D_mem;    // select data mem to write back
+// floating point selection adds here
+default:                      data <= D_alu;    // select alu value to write back
+endcase
 endmodule
