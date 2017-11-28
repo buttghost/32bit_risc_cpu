@@ -28,12 +28,13 @@ always #5 clk = ~clk;
 // IF
 wire [31:0] D_pc;   // bus between PC and IM
 wire [25:0] D_j;    // jump bus to extension
+wire [23:0] opc_rf, opc_alu;
 reg [31:0] D_b;    // calculated branch bus
 reg sel_b;
 PC pc (.Count(D_pc),    // output to IM
        .Jump({6'b0, D_j}),     // input from IM, extended 6 bit 0's
        .Branch(D_b),   // input from branch calculation
-       .sel_j(),    // input from opc dec
+       .sel_j(opc_rf[20]),    // input from opc dec
        .sel_b(sel_b),    // input from opc dec
        .clk(clk),
        .reset());
@@ -70,7 +71,6 @@ D_b <= D_prev_pc + D_imm;
 end
 
 // RF
-wire [23:0] opc_rf, opc_alu;
 OPC_Decoder decoder (.D(opc_rf),              // decoded opcode, to flipflop
                      .Opcode(D_opc));
 wire [31:0] D_reg_d1, D_reg_d2;
@@ -105,7 +105,7 @@ flip_flop #5 rf_phase_rd (.d(/*opc ? D_rs2 : D_rd*/),
 // comparer for sel_b
 always@(*)
 begin
-if (D_reg_d1 === {{27{D_rs2[4]}}, D_rs2} /*&& branch from opc*/)
+if (D_reg_d1 === {{27{D_rs2[4]}}, D_rs2} && opc_rf[21])
     sel_b <= 1;
 else
     sel_b <= 0;
@@ -113,11 +113,16 @@ end
 
 // ALU
 wire [31:0] D_alu_val, D_mem_addr;
+wire [23:0] opc_dm;
 ALU alu (.DOut(D_alu_val),
          .Drs1(D_alu_1),    // need a mux to choose data input
          .Drs2(D_alu_2),
          .Dimm(D_alu_imm));
 wire [31:0] D_mem_in;
+flip_flop #24 alu_phase_opc (.d(opc_alu),
+                             .clk(clk),
+                             .reset(),
+                             .q(opc_dm));
 flip_flop alu_phase_rs1 (.d(D_alu_1),   // to mem for store
                          .clk(clk),
                          .reset(),
@@ -137,5 +142,10 @@ wire [31:0] D_mem_out;
 data_mem mem (.DOut(D_mem_out),
               .AIn(D_mem_addr),
               .DIn(D_mem_in),
-              .WE());
+              .WE(opc_dm[2]));
+wire [23:0] opc_wb;
+flip_flop #24 dm_phase_opc (.d(opc_dm),
+                            .clk(clk),
+                            .reset(),
+                            .q(opc_wb));
 endmodule
