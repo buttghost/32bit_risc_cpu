@@ -25,8 +25,11 @@ input [8:0] in,
 output reg [8:0] out
     );
     
-always
+reg [8:0] signout;
+    
+always @ (*)
 begin
-out = in + 127;
+signout = in + 127;
+out = signout [7:0];
 end    
 endmodule

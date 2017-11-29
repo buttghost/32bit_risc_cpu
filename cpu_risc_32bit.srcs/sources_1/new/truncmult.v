@@ -22,21 +22,32 @@
 
 module truncmult(
 input [47:0] num,
-output reg [24:0] truncated,
+output reg [22:0] truncated,
 output reg [5:0] shift
     );
-integer i = 47;
-integer j = 0;
-always
+reg [47:0] shiftedfrac;    
+integer i = 45;
+always @ (*)
     begin
-       while (num[i] != 1)
-           begin
-               i = i - 1;//find the first 1
-           end
-       shift = i; //to shift the exponents
-       for (j = 0; j < 24; j = j + 1)
-           begin
-               truncated [23-j] = num [i-j]; //make truncated only the parts after the first 1
-           end
+    if (num[47])
+        begin
+        shift = -1;
+        truncated = num[46:24];
+        end
+    else if (num[46])
+        begin
+        shift = 0;
+        truncated = num[45:23];    
+        end
+    else
+        begin
+            while (num[i] != 1)
+                begin
+                    i = i - 1;
+                end
+                shift = 46 - i;
+                shiftedfrac = num << i;
+                truncated = shiftedfrac[46:24];
+        end    
     end    
 endmodule

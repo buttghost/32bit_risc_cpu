@@ -24,11 +24,11 @@ module IMem(AIn, DOut);
 input [31:0] AIn;
 output reg [31:0] DOut;
 
-reg [31:0] instructionmem [15:0];
+reg [31:0] instructionmem [31:0];
 
 always @ (*)
 begin
-    assign DOut = instructionmem [AIn];
+    DOut = instructionmem [AIn];
 end
 
 endmodule

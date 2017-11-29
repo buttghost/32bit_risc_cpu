@@ -27,7 +27,7 @@ output reg [22:0] frac,
 output reg [5:0] expchange
     );
 
-always
+always @ (*)
     begin
         frac = (in[0]) ? (in[23:1] + 1) : in[23:1];
         expchange = 47 - shift;

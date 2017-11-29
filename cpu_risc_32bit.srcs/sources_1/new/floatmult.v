@@ -25,7 +25,7 @@ input [23:0] num1, num2,
 output reg [47:0] product
     );
 
-always
+always @ (*)
     begin
         product = num1 * num2;
     end    

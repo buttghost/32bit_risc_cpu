@@ -26,7 +26,7 @@ input invalid,
 output reg [31:0] product
     );
 
-always
+always @ (*)
 begin
     product = (invalid) ? 32'b1 : in;
 end    

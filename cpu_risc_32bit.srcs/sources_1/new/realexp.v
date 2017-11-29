@@ -24,7 +24,7 @@ module realexp(
 input [8:0] in,
 output reg [8:0] out);
 
-always
+always @(*)
 begin
     out = in - 127;
 end
