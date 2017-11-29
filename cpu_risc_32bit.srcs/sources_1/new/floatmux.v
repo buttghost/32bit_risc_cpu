@@ -26,7 +26,7 @@ input sel,
 output reg [WIDTH-1:0] out
     );
     
-always
+always @ (*)
     begin
         out = (sel) ? in1 : in0;
     end    

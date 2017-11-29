@@ -26,7 +26,7 @@ input [7:0] shift,
 output reg [23:0] out
     );
     
-always
+always @(*)
     begin
         out = in >> shift;
     end    

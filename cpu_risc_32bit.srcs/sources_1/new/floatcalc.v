@@ -26,7 +26,7 @@ input parity, //sign bits xor'd
 output reg [24:0] sum //to handle in case of overflow
 );
 
-always
+always @ (*)
     begin
         if (parity == 0)
             begin

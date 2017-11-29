@@ -22,7 +22,7 @@
 
 module floatadd(
 input [31:0] num1, num2,
-output reg [31:0] sum);
+output [31:0] sum);
 
 wire sign, s, zero;
 wire [7:0] dexp, baseexp;

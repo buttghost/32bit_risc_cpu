@@ -3,9 +3,9 @@
 // Company: 
 // Engineer: 
 // 
-// Create Date: 11/09/2017 05:23:56 PM
+// Create Date: 11/28/2017 04:01:00 PM
 // Design Name: 
-// Module Name: floatcmp
+// Module Name: floatingtest
 // Project Name: 
 // Target Devices: 
 // Tool Versions: 
@@ -20,15 +20,24 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module floatcmp(
-input [31:0] num1, num2,
-output reg sign, s,
-output reg [7:0] dexp);
+module floattesting;
 
-always @ (*)
+/*
+module normalizeadd(
+input [24:0] in,
+output reg [5:0] shift,
+output reg [22:0] out,
+output reg zero
+    );
+*/
+reg [31:0] in1, in2;
+wire [31:0] product;
+
+floatadd TEST (in1, in2, product);
+always
     begin
-        s = (num2[30:0] > num1[30:0]);
-        sign = (num2[30:0]>num1[30:0]) ? num2[31] : num1[31];
-        dexp = (s) ? (num2[30:23]-num1[30:23]) : (num1[30:23]-num2[30:23]);
+    #5
+    in1 = 32'b0011_1111_1100_0000_0000_0000_0000_0000;
+    in2 = 32'b0100_0000_0010_0000_0000_0000_0000_0000;
     end
 endmodule

@@ -1,0 +1,14 @@
+#-----------------------------------------------------------
+# Vivado v2017.2 (64-bit)
+# SW Build 1909853 on Thu Jun 15 18:39:09 MDT 2017
+# IP Build 1909766 on Thu Jun 15 19:58:00 MDT 2017
+# Start of session at: Tue Nov 28 11:03:27 2017
+# Process ID: 11064
+# Current directory: C:/Users/18485/Documents/32bit_risc_cpu
+# Command line: vivado.exe -gui_launcher_event rodinguilauncherevent11032 C:\Users\18485\Documents\32bit_risc_cpu\cpu_risc_32bit.xpr
+# Log file: C:/Users/18485/Documents/32bit_risc_cpu/vivado.log
+# Journal file: C:/Users/18485/Documents/32bit_risc_cpu\vivado.jou
+#-----------------------------------------------------------
+start_gui
+open_project C:/Users/18485/Documents/32bit_risc_cpu/cpu_risc_32bit.xpr
+close_project
