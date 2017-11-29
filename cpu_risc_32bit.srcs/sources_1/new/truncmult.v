@@ -26,7 +26,7 @@ output reg [22:0] truncated,
 output reg [5:0] shift
     );
 reg [47:0] shiftedfrac;    
-integer i = 45;
+integer i = 0;
 always @ (*)
     begin
     if (num[47])
@@ -41,10 +41,13 @@ always @ (*)
         end
     else
         begin
-            while (num[i] != 1)
-                begin
-                    i = i - 1;
-                end
+                for (i = 0; i < 46; i = i + 1)
+                    begin
+                        if(num[i]==1)
+                            begin
+                            shift = i;
+                            end
+                    end
                 shift = 46 - i;
                 shiftedfrac = num << i;
                 truncated = shiftedfrac[46:24];

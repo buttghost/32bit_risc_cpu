@@ -20,15 +20,25 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module IMem(AIn, DOut);
+module IMem(AIn, DOut, we, DIn);
 input [31:0] AIn;
 output reg [31:0] DOut;
+input we; //tied to reset
+input [31:0] DIn;
 
 reg [31:0] instructionmem [31:0];
 
 always @ (*)
 begin
-    DOut = instructionmem [AIn];
+    if (we)
+        begin
+        instructionmem [AIn] = DIn;
+        DOut = 32'b0;
+        end
+    else
+        begin    
+        DOut = instructionmem [AIn];
+        end
 end
 
 endmodule

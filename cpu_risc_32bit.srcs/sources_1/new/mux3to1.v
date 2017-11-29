@@ -28,5 +28,12 @@ module mux3to1(
     input [1:0] sel
     );
     always@(sel)
-    Data = (sel == 2'b00) ? D0 : (sel == 2'b01) ? D1 : (sel == 2'b10) ? D2 : 32'bX;
+    begin
+    case(sel)
+    2'b00: Data <= D0;
+    2'b01: Data <= D1;
+    2'b10: Data <= D2;
+    2'b11: Data <= 32'b0;
+    endcase
+    end
 endmodule

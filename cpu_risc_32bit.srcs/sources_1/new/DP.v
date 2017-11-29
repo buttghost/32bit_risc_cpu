@@ -20,7 +20,9 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module DP();
+module DP(
+input [31:0] instin,
+input reset);
 reg clk;
 initial clk = 0;
 always #5 clk = ~clk;
@@ -37,10 +39,13 @@ PC pc (.Count(D_pc),    // output to IM
        .sel_j(opc_rf[20]),    // input from opc dec
        .sel_b(sel_b),    // input from opc dec
        .clk(clk),
-       .reset());
+       .reset(reset));
 wire [31:0] D_im;   // bus between IM and IR
 IMem im (.AIn(D_pc),    // input from PC
-         .DOut(D_im));      // output to IR
+         .DOut(D_im),
+         .we(reset), //when we're resetting the whole system, add instructions
+         .DIn(instin));  // insert instructions    
+         // output to IR
 wire [5:0] D_opc;   // bus between IR and OPC DEC
 wire [4:0] D_rs1;   // addr bus for rs1
 wire [4:0] D_rs2;   // addr bus for rs2 or rd in imm
@@ -62,7 +67,7 @@ end
 wire [31:0] D_prev_pc;
 flip_flop ir_phase (.d(D_pc),       // from PC
                     .clk(clk),
-                    .reset(),
+                    .reset(reset),
                     .q(D_prev_pc));      // to branch calculation
 // branch adder
 always@(*)
@@ -84,25 +89,25 @@ reg_file rf (.DOut1(D_reg_d1),
 wire [31:0] D_alu_1, D_alu_2, D_alu_imm;
 flip_flop #24 rf_phase_opc (.d(opc_rf),
                             .clk(clk),
-                            .reset(),
+                            .reset(reset),
                             .q(opc_alu));
 flip_flop rf_phase_d1 (.d(D_reg_d1),   // from rf DOut1
                         .clk(clk),
-                        .reset(),
+                        .reset(reset),
                         .q(D_alu_1));      // to ALU
 flip_flop rf_phase_d2 (.d(D_reg_d2),   // from rf DOut2
                        .clk(clk),
-                       .reset(),
+                       .reset(reset),
                        .q(D_alu_2));      // to ALU
 flip_flop rf_phase_imm (.d(D_imm),       // from sext immediate value
                         .clk(clk),
-                        .reset(),
+                        .reset(reset),
                         .q(D_alu_imm));      // to ALU
 wire [4:0] rd_rf_alu;
 //                              load,       move,       not,        movei,      sli,            sri,        addi,       subi
 flip_flop #5 rf_phase_rd (.d((opc_rf[3] | opc_rf[4] | opc_rf[14] | opc_rf[15] | opc_rf[16] | opc_rf[17] | opc_rf[18] | opc_rf[19]) ? D_rs2 : D_rd),
                           .clk(clk),
-                          .reset(),
+                          .reset(reset),
                           .q(rd_rf_alu));
 // comparer for sel_b
 always@(*)
@@ -114,7 +119,7 @@ else
 end
 
 // ALU
-wire [31:0] D_alu_val, D_mem_addr, D_dm_imm;
+wire [31:0] D_alu_val, D_mem_addr, D_dm_imm, D_alu_final, D_alu_fmult, D_alu_fadd;
 wire [23:0] opc_dm;
 ALU alu (.DOut(D_alu_val),
          .Drs1(D_alu_1),    // need a mux to choose data input
@@ -122,9 +127,12 @@ ALU alu (.DOut(D_alu_val),
          .Dimm(D_alu_imm),
          .Opc(opc_alu));
 wire [31:0] D_mem_in;
+mux3to1 floatimplement (.Data(D_alu_final), .D0(D_alu_val), .D1(D_alu_fadd), .D2(D_alu_fmult), .sel(opc_alu[23:22]));
+floatadd fadd (.num1(D_alu_1), .num2(D_alu_2), .sum(D_alu_fadd));
+floatingmultiplier fmult (.num1(D_alu_1), .num2(D_alu_2), .product(D_alu_fmult));
 flip_flop #24 alu_phase_opc (.d(opc_alu),
                              .clk(clk),
-                             .reset(),
+                             .reset(reset),
                              .q(opc_dm));
 flip_flop alu_phase_rs1 (.d(D_alu_1),   // to mem for store
                          .clk(clk),
@@ -132,16 +140,16 @@ flip_flop alu_phase_rs1 (.d(D_alu_1),   // to mem for store
                          .q(D_mem_in));
 flip_flop alu_phase_imm (.d(D_alu_imm),      // store imm for movei
                          .clk(clk),
-                         .reset(),
+                         .reset(reset),
                          .q(D_dm_imm));
-flip_flop alu_phase_alu (.d(D_alu_val),
+flip_flop alu_phase_alu (.d(D_alu_final),
                          .clk(clk),
-                         .reset(),
+                         .reset(reset),
                          .q(D_mem_addr));     // to data mem
 wire [31:0] rd_alu_dm;
 flip_flop alu_phase_rd (.d(rd_rf_alu),
                         .clk(clk),
-                        .reset(),
+                        .reset(reset),
                         .q(rd_alu_dm));
                         
 // DM
@@ -153,27 +161,27 @@ data_mem mem (.DOut(D_mem_out),
 wire [23:0] opc_wb;
 flip_flop #24 dm_phase_opc (.d(opc_dm),
                             .clk(clk),
-                            .reset(),
+                            .reset(reset),
                             .q(opc_wb));
 flip_flop dm_phase_rs1 (.d(D_mem_in),
                         .clk(clk),
-                        .reset(),
+                        .reset(reset),
                         .q(D_move));    // to mux for WB
 flip_flop dm_phase_imm (.d(D_dm_imm),
                         .clk(clk),
-                        .reset(),
+                        .reset(reset),
                         .q(D_movei));   // to mux for WB
 flip_flop dm_phase_mem (.d(D_mem_out),
                         .clk(clk),
-                        .reset(),
+                        .reset(reset),
                         .q(D_mem));     // to mux for WB
 flip_flop dm_phase_alu (.d(D_mem_addr),
                         .clk(clk),
-                        .reset(),
+                        .reset(reset),
                         .q(D_alu));     // to mux for WB
 flip_flop dm_phase_rd (.d(rd_alu_dm),
                        .clk(clk),
-                       .reset(),
+                       .reset(reset),
                        .q(ain3));
 always@(*)
 case(opc_wb)
