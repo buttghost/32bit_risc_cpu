@@ -29,6 +29,7 @@ module reg_file(
     input [31:0] DIn
     );
     reg [31:0] rf [31:0];
+    
     always@(*)
     begin
         DOut1 <= rf[AIn1];

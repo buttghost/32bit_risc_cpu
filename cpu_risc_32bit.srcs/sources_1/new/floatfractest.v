@@ -30,8 +30,8 @@ floatingmultiplier TEST (num, num2, test);
 always
     begin
     #5
-    num = 32'h3fc00000;
-    num2 = 32'h40000000;
+    num = 32'hbe800000;
+    num2 = 32'hbe700000;
     end
 
 endmodule

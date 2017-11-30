@@ -27,7 +27,7 @@ module mux3to1(
     input [31:0] D2,
     input [1:0] sel
     );
-    always@(sel)
+    always@(*)
     begin
     case(sel)
     2'b00: Data <= D0;

@@ -24,31 +24,18 @@ module data_mem(
     output reg [31:0] DOut,
     input [31:0] AIn,
     input [31:0] DIn,
-    input WE, preload,
-    input [31:0] preloadadd, preloaddat,
-    output reg [31:0] checkout,
-    input finish
-    );
+    input WE);
     reg[31:0] mem [255:0];
-    always@(WE, preloadadd)
-    begin
-        if (preload)
-            begin
-            if (finish == 0)
-                begin
-                mem[preloadadd] = preloaddat;
-                end
-             else
-                begin   
-                checkout = mem[preloadadd];
-                end
-            end
-        else
-            begin    
+    
+    initial
+        begin
+        mem[100] = 32'h00000008;
+        end
+    always@(WE, AIn)
+    begin   
             if (WE == 1)
                 mem[AIn] <= DIn;
             else
                 DOut <= mem[AIn];
-            end
     end
 endmodule
