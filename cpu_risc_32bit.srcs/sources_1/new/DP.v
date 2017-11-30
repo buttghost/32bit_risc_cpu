@@ -21,8 +21,10 @@
 
 
 module DP(
-input [31:0] instin,
-input reset);
+input [31:0] instin, instinadd,
+input reset, finish,
+input [31:0] insertmemdat, insertmemadd,
+output [31:0] finaldata);
 reg clk;
 initial clk = 0;
 always #5 clk = ~clk;
@@ -44,7 +46,8 @@ wire [31:0] D_im;   // bus between IM and IR
 IMem im (.AIn(D_pc),    // input from PC
          .DOut(D_im),
          .we(reset), //when we're resetting the whole system, add instructions
-         .DIn(instin));  // insert instructions    
+         .DIn(instin),
+         .ADin(instinadd));  // insert instructions    
          // output to IR
 wire [5:0] D_opc;   // bus between IR and OPC DEC
 wire [4:0] D_rs1;   // addr bus for rs1
@@ -157,7 +160,12 @@ wire [31:0] D_mem_out, D_move, D_movei, D_mem, D_alu;
 data_mem mem (.DOut(D_mem_out),
               .AIn(D_mem_addr),
               .DIn(D_mem_in),
-              .WE(opc_dm[2]));
+              .WE(opc_dm[2]),
+              .preload(reset),
+              .preloadadd(insertmemadd),
+              .preloaddat(insertmemdat),
+              .checkout(finaldata),
+              .finish(finish));
 wire [23:0] opc_wb;
 flip_flop #24 dm_phase_opc (.d(opc_dm),
                             .clk(clk),

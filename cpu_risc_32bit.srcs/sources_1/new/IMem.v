@@ -20,11 +20,12 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 
-module IMem(AIn, DOut, we, DIn);
+module IMem(AIn, DOut, we, DIn, ADin);
 input [31:0] AIn;
 output reg [31:0] DOut;
 input we; //tied to reset
-input [31:0] DIn;
+input [31:0] DIn; //insert instructions
+input [31:0] ADin;
 
 reg [31:0] instructionmem [31:0];
 
@@ -32,7 +33,7 @@ always @ (*)
 begin
     if (we)
         begin
-        instructionmem [AIn] = DIn;
+        instructionmem [ADin] = DIn;
         DOut = 32'b0;
         end
     else
